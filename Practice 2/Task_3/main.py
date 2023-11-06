@@ -1,4 +1,5 @@
 import json
+
 import msgpack
 
 
@@ -21,7 +22,7 @@ def load_data(path: str):
 def save_data_to_files(data: dict):
 	with open('results.json', 'w') as f:
 		json.dump(data, f)
-	
+
 	with open('results.msgpack', 'wb') as f:
 		packed = msgpack.packb(data)
 		f.write(packed)
