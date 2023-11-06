@@ -1,9 +1,9 @@
-import numpy as np
 import json
+import numpy as np
 
 
 def normalize_matrix(source_path: str, result_path: str) -> None:
-	matrix = np.load('matrix_55.npy')
+	matrix = np.load(source_path)
 	sum_all = np.sum(matrix)
 	avr_all = np.mean(matrix)
 	sum_md = np.sum(np.diag(matrix))

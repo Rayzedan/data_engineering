@@ -8,10 +8,10 @@ def load_data(path: str):
 		data = pickle.load(f)
 	for item in data:
 		results[item['name']] = item['price']
-	increase_result('price_info_55.json', results)
+	change_data('price_info_55.json', results)
 
 
-def increase_result(path: str, data: dict):
+def change_data(path: str, data: dict):
 	with open(path, 'rb') as f:
 		source_data = json.load(f)
 	for item in source_data:
