@@ -3,11 +3,12 @@ import sqlite3
 
 
 def update_table():
-	with open("task_1_var_55_item.json") as jsonFile:
+	with open("task_1_var_55_item.json", encoding='utf-8') as jsonFile:
 		data = json.load(jsonFile)
 
 	with sqlite3.connect('game_results.db') as connection:
 		cursor = connection.cursor()
+		connection.row_factory = sqlite3.Row
 
 		try:
 			with connection:
@@ -23,26 +24,27 @@ def update_table():
 				time_on_game INTEGER NOT NULL
 				)
 				''')
-				for item in data:
-					insert_query = (f"INSERT INTO game_results (id, name, city, begin, system, tours_count, min_rating, "
-									f"time_on_game) VALUES (?, ?, ?, ?, ?, ?, ?, ?)")
-					values = (
-						item['id'], item['name'], item['city'], item['begin'], item['system'], item['tours_count'],
-						item['min_rating'], item['time_on_game'])
-					cursor.execute(insert_query, values)
-		except:
+				cursor.executemany('''
+					INSERT INTO game_results (id, name, city, begin, system, tours_count, min_rating, time_on_game)
+					VALUES(
+						:id, :name, :city, :begin, :system, :tours_count, :min_rating, :time_on_game)
+					''', data)
+		except Exception as e:
+			print(e)
 			pass
 
 
 def sorted_data():
 	with sqlite3.connect('game_results.db') as connection:
 		cursor = connection.cursor()
+		connection.row_factory = sqlite3.Row
 		try:
 			with connection:
 				select_query = "SELECT * FROM game_results ORDER BY min_rating LIMIT 65"
 				cursor.execute(select_query)
 				results = cursor.fetchall()
-		except:
+		except Exception as e:
+			print(e)
 			pass
 		with open('sorted_data.json', 'w', encoding='utf-8') as f:
 			json.dump(results, f, ensure_ascii=False)
@@ -51,6 +53,7 @@ def sorted_data():
 def sorted_by_column_data():
 	with sqlite3.connect('game_results.db') as connection:
 		cursor = connection.cursor()
+		connection.row_factory = sqlite3.Row
 		try:
 			with connection:
 				select_query = "SELECT MAX(time_on_game) FROM game_results"
@@ -65,19 +68,22 @@ def sorted_by_column_data():
 				select_query = "SELECT SUM(time_on_game) FROM game_results"
 				cursor.execute(select_query)
 				print(cursor.fetchall())
-		except:
+		except Exception as e:
+			print(e)
 			pass
 
 
 def sorted_by_city():
 	with sqlite3.connect('game_results.db') as connection:
 		cursor = connection.cursor()
+		connection.row_factory = sqlite3.Row
 		try:
 			with connection:
 				select_query = "SELECT city FROM game_results"
 				cursor.execute(select_query)
 				results = cursor.fetchall()
-		except:
+		except Exception as e:
+			print(e)
 			pass
 		city_counts = {}
 		for city in results:
@@ -92,12 +98,14 @@ def sorted_by_city():
 def sorted_by_predicate():
 	with sqlite3.connect('game_results.db') as connection:
 		cursor = connection.cursor()
+		connection.row_factory = sqlite3.Row
 		try:
 			with connection:
 				select_query = "SELECT * FROM game_results WHERE min_rating > 100 ORDER BY time_on_game LIMIT 65"
 				cursor.execute(select_query)
 				results = cursor.fetchall()
-		except:
+		except Exception as e:
+			print(e)
 			pass
 		with open('sorted_by_predicate_data.json', 'w', encoding='utf-8') as f:
 			json.dump(results, f, ensure_ascii=False)

@@ -1,7 +1,7 @@
 import sqlite3
 import json
 import msgpack
-
+from utils import save_result
 
 def create_db():
 	with open("../Task_1/task_1_var_55_item.json") as jsonFile:
@@ -9,6 +9,7 @@ def create_db():
 
 	with sqlite3.connect('game_results.db') as connection:
 		cursor = connection.cursor()
+		connection.row_factory = sqlite3.Row
 
 		try:
 			with connection:
@@ -30,16 +31,14 @@ def create_db():
 				id INTEGER PRIMARY KEY AUTOINCREMENT,
 				name TEXT NOT NULL,
 				place INTEGER NOT NULL,
-				price INTEGER NOT NULL
+				prise INTEGER NOT NULL
 				)
 				''')
-				for item in data:
-					insert_query = (f"INSERT INTO game_results (id, name, city, begin, system, tours_count, min_rating, "
-									f"time_on_game) VALUES (?, ?, ?, ?, ?, ?, ?, ?)")
-					values = (
-						item['id'], item['name'], item['city'], item['begin'], item['system'], item['tours_count'],
-						item['min_rating'], item['time_on_game'])
-					cursor.execute(insert_query, values)
+				cursor.executemany('''
+					INSERT INTO game_results (id, name, city, begin, system, tours_count, min_rating, time_on_game)
+					VALUES(
+						:id, :name, :city, :begin, :system, :tours_count, :min_rating, :time_on_game)
+					''', data)
 		except Exception as e:
 			print(e)
 			pass
@@ -51,12 +50,13 @@ def update_table():
 
 	with sqlite3.connect('game_results.db') as connection:
 		cursor = connection.cursor()
+		connection.row_factory = sqlite3.Row
 		try:
 			with connection:
-				for item in data:
-					insert_query = f"INSERT INTO city_awards (name, place, price) VALUES (?, ?, ?)"
-					values = (item['name'], item['place'], item['prise'])
-					cursor.execute(insert_query, values)
+				cursor.executemany('''
+					INSERT INTO city_awards (name, place, prise)
+					VALUES(:name, :place, :prise)
+				''', data)
 		except Exception as e:
 			print(e)
 			pass
@@ -65,23 +65,24 @@ def update_table():
 def join_tables():
 	with sqlite3.connect('game_results.db') as connection:
 		cursor = connection.cursor()
+		connection.row_factory = sqlite3.Row
 		try:
 			with connection:
 				insert_query = f"SELECT	* FROM game_results JOIN city_awards ON game_results.name = city_awards.name"
 				cursor.execute(insert_query)
-				print(cursor.fetchall())
+				save_result(cursor.fetchall(), "result_request_1")
 				insert_query = (f"SELECT MAX(time_on_game) FROM game_results JOIN city_awards "
 								f"ON game_results.name = city_awards.name WHERE place > 4")
 				cursor.execute(insert_query)
-				print(cursor.fetchall())
+				save_result(cursor.fetchall(), "result_request_2")
 				insert_query = (f"SELECT MIN(time_on_game) FROM game_results JOIN city_awards "
-								f"ON game_results.name = city_awards.name WHERE price > 5000")
+								f"ON game_results.name = city_awards.name WHERE prise > 5000")
 				cursor.execute(insert_query)
-				print(cursor.fetchall())
+				save_result(cursor.fetchall(), "result_request_3")
 				insert_query = (f"SELECT AVG(place) FROM game_results JOIN city_awards "
 								f"ON game_results.name = city_awards.name WHERE min_rating > 100")
 				cursor.execute(insert_query)
-				print(cursor.fetchall())
+				save_result(cursor.fetchall(), "result_request_4")
 		except Exception as e:
 			print(e)
 			pass

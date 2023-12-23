@@ -1,5 +1,6 @@
 import sqlite3
 import pickle
+from utils import save_result
 
 
 def create_db():
@@ -24,6 +25,7 @@ def create_db():
 
 	with sqlite3.connect('music_catalog.db') as connection:
 		cursor = connection.cursor()
+		connection.row_factory = sqlite3.Row
 
 		try:
 			with connection:
@@ -43,12 +45,11 @@ def create_db():
 				loudness REAL
 				)
 				''')
-				for record in data:
-					cursor.execute('''INSERT INTO music
-					(artist, song, duration_ms, year, tempo, genre, instrumentalness, explicit, loudness)
-					VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)''', (
-						record['artist'], record['song'], record['duration_ms'], record['year'], record['tempo'],
-						record['genre'], record['instrumentalness'], record['explicit'], record['loudness']))
+				cursor.executemany('''
+					INSERT INTO music (artist, song, duration_ms, year, tempo, genre, instrumentalness, explicit, loudness)
+					VALUES(
+						:artist, :song, :duration_ms, :year, :tempo, :genre, :instrumentalness, :explicit, :loudness)
+					''', data)
 		except Exception as e:
 			print(e)
 			pass
@@ -59,6 +60,7 @@ def update_table():
 		data = pickle.load(f)
 	with sqlite3.connect('music_catalog.db') as connection:
 		cursor = connection.cursor()
+		connection.row_factory = sqlite3.Row
 
 		try:
 			with connection:
@@ -67,17 +69,19 @@ def update_table():
 					cursor = cursor.execute("SELECT * FROM music WHERE artist=?", (artist,))
 					existing_record = cursor.fetchone()
 					if existing_record:
-						cursor.execute('''UPDATE music SET
-						acousticness=?,
-						popularity=?
-						WHERE artist=?''', (
-							record['acousticness'], record['popularity'], artist))
+						cursor.execute('''
+							UPDATE music SET
+							acousticness=?,
+							popularity=?
+							WHERE artist=?''', (
+								record['acousticness'], record['popularity'], artist))
 					else:
 						# если записи нет в таблице, добавляем ее
-						cursor.execute('''INSERT INTO music
-						(artist, song, duration_ms, year, tempo, genre,
-						acousticness, energy, popularity)
-						VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)''',
+						cursor.execute('''
+							INSERT INTO music (artist, song, duration_ms, year, tempo, genre,
+							acousticness, energy, popularity)
+							VALUES (:artist, :song, :duration_ms, :year, :tempo, :genre, :acousticness, :energy, :popularity)
+							''',
 									(record['artist'], record['song'], int(record['duration_ms']), int(record['year']),
 										float(record['tempo']), record['genre'], float(record['acousticness']),
 										float(record['energy']), int(record['popularity'])))
@@ -89,34 +93,35 @@ def update_table():
 def sorted_data():
 	with sqlite3.connect('music_catalog.db') as connection:
 		cursor = connection.cursor()
+		connection.row_factory = sqlite3.Row
 		try:
 			with connection:
 				select_query = "SELECT * FROM music ORDER BY popularity LIMIT 65"
 				cursor.execute(select_query)
-				results = cursor.fetchall()
+				save_result(cursor.fetchall(), "result_request_1")
 		except Exception as e:
 			print(e)
 			pass
-	print(results)
 
 
 def sorted_by_column_data():
 	with sqlite3.connect('music_catalog.db') as connection:
 		cursor = connection.cursor()
+		connection.row_factory = sqlite3.Row
 		try:
 			with connection:
 				select_query = "SELECT MAX(energy) FROM music"
 				cursor.execute(select_query)
-				print(cursor.fetchall())
+				save_result(cursor.fetchall(), "result_request_2")
 				select_query = "SELECT MIN(energy) FROM music"
 				cursor.execute(select_query)
-				print(cursor.fetchall())
+				save_result(cursor.fetchall(), "result_request_3")
 				select_query = "SELECT AVG(energy) FROM music"
 				cursor.execute(select_query)
-				print(cursor.fetchall())
+				save_result(cursor.fetchall(), "result_request_4")
 				select_query = "SELECT SUM(energy) FROM music"
 				cursor.execute(select_query)
-				print(cursor.fetchall())
+				save_result(cursor.fetchall(), "result_request_5")
 		except Exception as e:
 			print(e)
 			pass
@@ -125,6 +130,7 @@ def sorted_by_column_data():
 def sorted_by_genre():
 	with sqlite3.connect('music_catalog.db') as connection:
 		cursor = connection.cursor()
+		connection.row_factory = sqlite3.Row
 		try:
 			with connection:
 				select_query = "SELECT genre FROM music"
@@ -139,21 +145,21 @@ def sorted_by_genre():
 				genre_counts[genre[0]] += 1
 			else:
 				genre_counts[genre[0]] = 1
-		print(genre_counts)
+		save_result(results, "result_request_6")
 
 
 def sorted_by_predicate():
 	with sqlite3.connect('music_catalog.db') as connection:
 		cursor = connection.cursor()
+		connection.row_factory = sqlite3.Row
 		try:
 			with connection:
 				select_query = "SELECT * FROM music WHERE popularity > 0.1 ORDER BY energy LIMIT 70"
 				cursor.execute(select_query)
-				results = cursor.fetchall()
 		except Exception as e:
 			print(e)
 			pass
-		print(results)
+		save_result(cursor.fetchall(), "result_request_7")
 
 
 if __name__ == '__main__':
