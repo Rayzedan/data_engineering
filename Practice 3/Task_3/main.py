@@ -1,10 +1,13 @@
 import collections
 import json
 import os
+import zipfile
+
 import pandas as pd
 from bs4 import BeautifulSoup
 
-os.system("unzip zip_var_55.zip")
+with zipfile.ZipFile('zip_var_55.zip', 'r') as zip_ref:
+	zip_ref.extractall()
 items = []
 for filename in os.listdir():
 	if filename.endswith(".xml"):

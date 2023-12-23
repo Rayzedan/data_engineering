@@ -1,52 +1,63 @@
-import os
+import collections
 import json
+import os
 import re
-
+import zipfile
+import pandas as pd
 from bs4 import BeautifulSoup
-from collections import Counter
 
 
-os.system("unzip zip_var_55.zip")
-data = []
+with zipfile.ZipFile('zip_var_55.zip', 'r') as zip_ref:
+	zip_ref.extractall()
+items = []
 for filename in os.listdir():
 	if filename.endswith(".html"):
 		with open(filename, "r") as f:
 			html = f.read()
 			soup = BeautifulSoup(html, 'html.parser')
-			info = {}
-			info['type'] = soup.find('div', {'class': 'chess-wrapper'}).find_all('span')[0].text
-			info['tournament'] = soup.find('h1', {'class': 'title'}).text
-			info['city'] = soup.find('p', {'class': 'address-p'}).text.split(':')[1].strip()
-			info['start_date'] = soup.find('p', {'class': 'address-p'}).text.split(':')[2].strip()
-			info['num_rounds'] = int(soup.find('span', {'class': 'count'}).text.split(':')[1])
-			info['time_control'] = soup.find('span', {'class': 'year'}).text.split(':')[1].strip()
-			info['min_rating'] = int(soup.find_all('span')[-1].text.split(':')[1])
-			info['rating'] = float(soup.find_all('span')[-3].text.split(':')[1])
-			info['views'] = int(
+			item = {}
+			item['type'] = soup.find('div', {'class': 'chess-wrapper'}).find_all('span')[0].text
+			item['tournament'] = soup.find('h1', {'class': 'title'}).text
+			item['city'] = soup.find('p', {'class': 'address-p'}).text.split(':')[1].strip()
+			item['start_date'] = soup.find('p', {'class': 'address-p'}).text.split(':')[2].strip()
+			item['num_rounds'] = int(soup.find('span', {'class': 'count'}).text.split(':')[1])
+			item['time_control'] = soup.find('span', {'class': 'year'}).text.split(':')[1].strip()
+			item['min_rating'] = int(soup.find_all('span')[-1].text.split(':')[1])
+			item['rating'] = float(soup.find_all('span')[-3].text.split(':')[1])
+			item['views'] = int(
 				soup.find_all("span", string=re.compile("Просмотры:"))[0].getText().split(':')[1].strip())
-			data.append(info)
+			items.append(item)
 
-with open('statistics.json', 'w') as f:
-	json.dump(data, f, ensure_ascii=False)
+items = sorted(items, key=lambda x: x['min_rating'], reverse=True)
+with open("result_all.json", "w", encoding="utf-8") as f:
+	f.write(json.dumps(items, ensure_ascii=False))
+filtered_items = []
+for it in items:
+	if it['min_rating'] < 2000:
+		filtered_items.append(it)
 
-sorted_data = sorted(data, key=lambda x: x['rating'])
-filtered_data = [d for d in data if d['type'] == 'Swiss']
-ratings = [d['rating'] for d in data]
-sum_rating = sum(ratings)
-min_rating = min(ratings)
-max_rating = max(ratings)
-avg_rating = sum_rating / len(ratings)
+result = []
 
-tournaments = [d['tournament'] for d in data]
-label_freq = dict(Counter(tournaments))
+df = pd.DataFrame(items)
+pd.set_option('display.float_format', '{:.1f}'.format)
 
-print('Отсортированные значения:\n', sorted_data)
-print('Отфильтрованные значения:\n', filtered_data)
-print('Сумма рейтингов:', sum_rating)
-print('Минимальный рейтинг:', min_rating)
-print('Максимальный рейтинг:', max_rating)
-print('Средний рейтинг:', avg_rating)
-print('Частота меток:', label_freq)
+stats = df['min_rating'].agg(['max', 'min', 'mean', 'median', 'std']).to_dict()
+result.append(stats)
+
+result2 = []
+
+words = [item['city'] for item in items]
+f1 = collections.Counter(words)
+result2.append(f1)
+
+with open("result_filter.json", "w", encoding="utf-8") as f:
+	f.write(json.dumps(filtered_items, ensure_ascii=False))
+
+with open("result_math.json", "w", encoding="utf-8") as f:
+	f.write(json.dumps(result, ensure_ascii=False))
+
+with open("result_frequency.json", "w", encoding="utf-8") as f:
+	f.write(json.dumps(result2, ensure_ascii=False))
 
 for filename in os.listdir():
 	if filename.endswith(f'.html'):

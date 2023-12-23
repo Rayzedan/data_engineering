@@ -1,11 +1,13 @@
 import collections
 import json
 import os
+import zipfile
+
 import pandas as pd
 from bs4 import BeautifulSoup
 
-
-os.system("unzip zip_var_55.zip")
+with zipfile.ZipFile('zip_var_55.zip', 'r') as zip_ref:
+	zip_ref.extractall()
 items = []
 for filename in os.listdir():
 	if filename.endswith(".html"):
@@ -54,7 +56,6 @@ result2 = []
 words = [item['title'] for item in items]
 f1 = collections.Counter(words)
 result2.append(f1)
-
 
 with open("result_filter.json", "w", encoding="utf-8") as f:
 	f.write(json.dumps(filtered_items, ensure_ascii=False))
