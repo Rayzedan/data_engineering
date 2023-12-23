@@ -7,7 +7,7 @@ import seaborn as sns
 df_list = []
 
 df1 = pd.DataFrame()
-for chunk in pd.read_csv('data/[1]game_logs.csv', chunksize=1000,
+for chunk in pd.read_csv('data/[1]game_logs.csv', chunksize=10000,
 				  dtype={"h_score": "Int64", "v_score": "Int64", "day_of_week": "string", "h_name": "string",
 						 "length_outs": "Int64", "v_hits": "Int64", "v_doubles": "Int64", "v_triples": "Int64",
 						 "v_homeruns": "Int64", "v_rbi": "Int64"}):
@@ -15,7 +15,7 @@ for chunk in pd.read_csv('data/[1]game_logs.csv', chunksize=1000,
 df_list.append(df1)
 
 df2 = pd.DataFrame()
-for chunk in pd.read_csv('data/[3]flights.csv', chunksize=1000,
+for chunk in pd.read_csv('data/[3]flights.csv', chunksize=10000,
 				  dtype={"FLIGHT_NUMBER": "Int64", "ORIGIN_AIRPORT": "string", "DAY_OF_WEEK": "string",
 						 "DESTINATION_AIRPORT": "string", "DISTANCE": "Int64", "AIR_TIME": "Int64", "TAXI_OUT": "Int64",
 						 "ARRIVAL_DELAY": "Int64", "AIRLINE": "string", "TAXI_IN": "Int64"}):
@@ -23,7 +23,7 @@ for chunk in pd.read_csv('data/[3]flights.csv', chunksize=1000,
 df_list.append(df2)
 
 df3 = pd.DataFrame()
-for chunk in pd.read_csv('data/CIS_Automotive_Kaggle_Sample.csv', chunksize=1000,
+for chunk in pd.read_csv('data/CIS_Automotive_Kaggle_Sample.csv', chunksize=10000,
 				  dtype={"vf_MAKE": "string", "stockNum": "string", "vf_EngineCylinders": "Int64", "vf_EngineKW": float,
 						 "vf_EngineModel": "string", "vf_EntertainmentSystem": "string",
 						 "vf_ForwardCollisionWarning": "string", "vf_FuelInjectionType": "string",
@@ -32,14 +32,14 @@ for chunk in pd.read_csv('data/CIS_Automotive_Kaggle_Sample.csv', chunksize=1000
 df_list.append(df3)
 
 df4 = pd.DataFrame()
-for chunk in pd.read_csv('data/dataset.csv', chunksize=1000,
+for chunk in pd.read_csv('data/dataset.csv', chunksize=10000,
 				  dtype={"name": "string", "spkid": "Int64", "id": "string", "diameter": float, "albedo": float,
 						 "diameter_sigma": float, "epoch": float, "epoch_cal": float, "om": float, "w": float}):
 	df4 = pd.concat([df4, chunk])
 df_list.append(df4)
 
 df5 = pd.DataFrame()
-for chunk in pd.read_csv('data/vacancies_2020.csv', chunksize=1000,
+for chunk in pd.read_csv('data/vacancies_2020.csv', chunksize=10000,
 				  dtype={"id": "Int64", "key_skills": "string", "schelude_name": "string", "schelude_id": "string",
 						 "expirience_id": "string", "expirience_name": "string", "salary_from": "Int64",
 						 "salary_to": "Int64", "employer_name": "string", "employer_industries": "string"}):
@@ -47,7 +47,7 @@ for chunk in pd.read_csv('data/vacancies_2020.csv', chunksize=1000,
 df_list.append(df5)
 
 df6 = pd.DataFrame()
-for chunk in pd.read_csv('data/la_crime_2010_to_2023.csv', chunksize=1000,
+for chunk in pd.read_csv('data/la_crime_2010_to_2023.csv', chunksize=10000,
 				  dtype={"AREA_NAME": "string", "Vict age": "Int64", "Vict sex": "string", "Premis Cd": "Float64",
 						 "Status": "string", "Status Desc": "string", "Location": "string",
 						 "LAT": "Float64", "LON": "Float64", "Cross Street": "string"}):
