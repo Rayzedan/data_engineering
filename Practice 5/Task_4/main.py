@@ -1,6 +1,6 @@
 import csv
 import os
-
+from utils import save_result
 from pymongo import MongoClient
 
 client = MongoClient('mongodb://localhost:27017/')
@@ -87,12 +87,12 @@ aggregate_data_result = aggregate_data()
 
 print("Задание 1: Выборка данных")
 print("Результаты:")
-for item in fetch_data_result:
-	print(item)
+for index, item in enumerate(fetch_data_result):
+	save_result(item, f'result_task_1_{index}')
 print("Задание 2: Выборка данных с агрегацией")
 print("Результаты:")
-for item in aggregate_data_result:
-	print(item)
+for index, item in enumerate(aggregate_data_result):
+	save_result(item, f'result_task_2_{index}')
 print("Задание 3: Обновление/удаление данных")
 update_data()
 print("Данные успешно обновлены/удалены")

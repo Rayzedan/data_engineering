@@ -3,6 +3,7 @@ import json
 import msgpack
 from utils import save_result
 
+
 def create_db():
 	with open("../Task_1/task_1_var_55_item.json") as jsonFile:
 		data = json.load(jsonFile)
