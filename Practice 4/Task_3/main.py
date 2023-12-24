@@ -25,7 +25,7 @@ def create_db():
 
 	with sqlite3.connect('music_catalog.db') as connection:
 		cursor = connection.cursor()
-		connection.row_factory = sqlite3.Row
+		cursor.row_factory = sqlite3.Row
 
 		try:
 			with connection:
@@ -60,7 +60,7 @@ def update_table():
 		data = pickle.load(f)
 	with sqlite3.connect('music_catalog.db') as connection:
 		cursor = connection.cursor()
-		connection.row_factory = sqlite3.Row
+		cursor.row_factory = sqlite3.Row
 
 		try:
 			with connection:
@@ -93,12 +93,12 @@ def update_table():
 def sorted_data():
 	with sqlite3.connect('music_catalog.db') as connection:
 		cursor = connection.cursor()
-		connection.row_factory = sqlite3.Row
+		cursor.row_factory = sqlite3.Row
 		try:
 			with connection:
 				select_query = "SELECT * FROM music ORDER BY popularity LIMIT 65"
 				cursor.execute(select_query)
-				save_result(cursor.fetchall(), "result_request_1")
+				save_result([dict(row) for row in cursor.fetchall()], "result_request_1")
 		except Exception as e:
 			print(e)
 			pass
@@ -107,21 +107,21 @@ def sorted_data():
 def sorted_by_column_data():
 	with sqlite3.connect('music_catalog.db') as connection:
 		cursor = connection.cursor()
-		connection.row_factory = sqlite3.Row
+		cursor.row_factory = sqlite3.Row
 		try:
 			with connection:
 				select_query = "SELECT MAX(energy) FROM music"
 				cursor.execute(select_query)
-				save_result(cursor.fetchall(), "result_request_2")
+				save_result([dict(row) for row in cursor.fetchall()], "result_request_2")
 				select_query = "SELECT MIN(energy) FROM music"
 				cursor.execute(select_query)
-				save_result(cursor.fetchall(), "result_request_3")
+				save_result([dict(row) for row in cursor.fetchall()], "result_request_3")
 				select_query = "SELECT AVG(energy) FROM music"
 				cursor.execute(select_query)
-				save_result(cursor.fetchall(), "result_request_4")
+				save_result([dict(row) for row in cursor.fetchall()], "result_request_4")
 				select_query = "SELECT SUM(energy) FROM music"
 				cursor.execute(select_query)
-				save_result(cursor.fetchall(), "result_request_5")
+				save_result([dict(row) for row in cursor.fetchall()], "result_request_5")
 		except Exception as e:
 			print(e)
 			pass
@@ -130,7 +130,7 @@ def sorted_by_column_data():
 def sorted_by_genre():
 	with sqlite3.connect('music_catalog.db') as connection:
 		cursor = connection.cursor()
-		connection.row_factory = sqlite3.Row
+		cursor.row_factory = sqlite3.Row
 		try:
 			with connection:
 				select_query = "SELECT genre FROM music"
@@ -145,13 +145,13 @@ def sorted_by_genre():
 				genre_counts[genre[0]] += 1
 			else:
 				genre_counts[genre[0]] = 1
-		save_result(results, "result_request_6")
+		save_result([dict(row) for row in cursor.fetchall()], "result_request_6")
 
 
 def sorted_by_predicate():
 	with sqlite3.connect('music_catalog.db') as connection:
 		cursor = connection.cursor()
-		connection.row_factory = sqlite3.Row
+		cursor.row_factory = sqlite3.Row
 		try:
 			with connection:
 				select_query = "SELECT * FROM music WHERE popularity > 0.1 ORDER BY energy LIMIT 70"
@@ -159,7 +159,7 @@ def sorted_by_predicate():
 		except Exception as e:
 			print(e)
 			pass
-		save_result(cursor.fetchall(), "result_request_7")
+		save_result([dict(row) for row in cursor.fetchall()], "result_request_7")
 
 
 if __name__ == '__main__':

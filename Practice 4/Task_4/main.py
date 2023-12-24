@@ -10,7 +10,7 @@ def create_db():
 
 	with sqlite3.connect('computer_accessories.db') as connection:
 		cursor = connection.cursor()
-		connection.row_factory = sqlite3.Row
+		cursor.row_factory = sqlite3.Row
 
 		try:
 			with connection:
@@ -41,7 +41,7 @@ def update_db():
 
 	with (sqlite3.connect('computer_accessories.db') as connection):
 		cursor = connection.cursor()
-		connection.row_factory = sqlite3.Row
+		cursor.row_factory = sqlite3.Row
 
 		try:
 			with connection:
@@ -89,13 +89,13 @@ def update_db():
 def most_updated_products():
 	with sqlite3.connect('computer_accessories.db') as connection:
 		cursor = connection.cursor()
-		connection.row_factory = sqlite3.Row
+		cursor.row_factory = sqlite3.Row
 		try:
 			with connection:
 				cursor.execute("""SELECT * FROM computer_accessories
 				ORDER BY count DESC
 				""")
-				save_result(cursor.fetchall(), "result_request_1")
+				save_result([dict(row) for row in cursor.fetchall()], "result_request_1")
 		except Exception as e:
 			print(e)
 			pass
@@ -104,25 +104,25 @@ def most_updated_products():
 def products_price():
 	with sqlite3.connect('computer_accessories.db') as connection:
 		cursor = connection.cursor()
-		connection.row_factory = sqlite3.Row
+		cursor.row_factory = sqlite3.Row
 		try:
 			with connection:
 				cursor.execute("""SELECT SUM(price) FROM computer_accessories
 				ORDER BY name
 				""")
-				save_result(cursor.fetchall(), "result_request_2")
+				save_result([dict(row) for row in cursor.fetchall()], "result_request_2")
 				cursor.execute("""SELECT MIN(price) FROM computer_accessories
 				ORDER BY name
 				""")
-				save_result(cursor.fetchall(), "result_request_3")
+				save_result([dict(row) for row in cursor.fetchall()], "result_request_3")
 				cursor.execute("""SELECT MAX(price) FROM computer_accessories
 				ORDER BY name
 				""")
-				save_result(cursor.fetchall(), "result_request_4")
+				save_result([dict(row) for row in cursor.fetchall()], "result_request_4")
 				cursor.execute("""SELECT AVG(price) FROM computer_accessories
 				ORDER BY name
 				""")
-				save_result(cursor.fetchall(), "result_request_5")
+				save_result([dict(row) for row in cursor.fetchall()], "result_request_5")
 		except Exception as e:
 			print(e)
 			pass
@@ -131,25 +131,25 @@ def products_price():
 def products_quantity():
 	with sqlite3.connect('computer_accessories.db') as connection:
 		cursor = connection.cursor()
-		connection.row_factory = sqlite3.Row
+		cursor.row_factory = sqlite3.Row
 		try:
 			with connection:
 				cursor.execute("""SELECT SUM(quantity) FROM computer_accessories
 				ORDER BY name
 				""")
-				save_result(cursor.fetchall(), "result_request_6")
+				save_result([dict(row) for row in cursor.fetchall()], "result_request_6")
 				cursor.execute("""SELECT MIN(quantity) FROM computer_accessories
 				ORDER BY name
 				""")
-				save_result(cursor.fetchall(), "result_request_7")
+				save_result([dict(row) for row in cursor.fetchall()], "result_request_7")
 				cursor.execute("""SELECT MAX(quantity) FROM computer_accessories
 				ORDER BY name
 				""")
-				save_result(cursor.fetchall(), "result_request_8")
+				save_result([dict(row) for row in cursor.fetchall()], "result_request_8")
 				cursor.execute("""SELECT AVG(quantity) FROM computer_accessories
 				ORDER BY name
 				""")
-				save_result(cursor.fetchall(), "result_request_9")
+				save_result([dict(row) for row in cursor.fetchall()], "result_request_9")
 		except Exception as e:
 			print(e)
 			pass
@@ -158,25 +158,25 @@ def products_quantity():
 def products_view():
 	with sqlite3.connect('computer_accessories.db') as connection:
 		cursor = connection.cursor()
-		connection.row_factory = sqlite3.Row
+		cursor.row_factory = sqlite3.Row
 		try:
 			with connection:
 				cursor.execute("""SELECT SUM(views) FROM computer_accessories
 				ORDER BY name
 				""")
-				save_result(cursor.fetchall(), "result_request_10")
+				save_result([dict(row) for row in cursor.fetchall()], "result_request_10")
 				cursor.execute("""SELECT MIN(views) FROM computer_accessories
 				ORDER BY name
 				""")
-				save_result(cursor.fetchall(), "result_request_11")
+				save_result([dict(row) for row in cursor.fetchall()], "result_request_11")
 				cursor.execute("""SELECT MAX(views) FROM computer_accessories
 				ORDER BY name
 				""")
-				save_result(cursor.fetchall(), "result_request_12")
+				save_result([dict(row) for row in cursor.fetchall()], "result_request_12")
 				cursor.execute("""SELECT AVG(views) FROM computer_accessories
 				ORDER BY name
 				""")
-				save_result(cursor.fetchall(), "result_request_13")
+				save_result([dict(row) for row in cursor.fetchall()], "result_request_13")
 		except Exception as e:
 			print(e)
 			pass
