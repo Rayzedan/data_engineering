@@ -106,12 +106,10 @@ def create_and_update_db():
 		])
 	save_result(list(result), "result_aggregate_6")
 
-	result = collection.find({'age': {'$eq': collection.find_one(sort=[('age', pymongo.ASCENDING)])['age']}}).sort(
-		'salary', pymongo.DESCENDING).limit(1)
+	result = collection.find().sort([('age', pymongo.ASCENDING), ('salary', pymongo.DESCENDING)]).limit(1)
 	save_result(list(result), "result_aggregate_6")
 
-	result = collection.find({'age': {'$eq': collection.find_one(sort=[('age', pymongo.DESCENDING)])['age']}}).sort(
-		'salary', pymongo.ASCENDING).limit(1)
+	result = collection.find().sort([('age', pymongo.DESCENDING), ('salary', pymongo.ASCENDING	)]).limit(1)
 	save_result(list(result), "result_aggregate_7")
 
 	result = collection.aggregate(

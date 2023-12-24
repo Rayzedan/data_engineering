@@ -33,7 +33,7 @@ for chunk in pd.read_csv('../data/CIS_Automotive_Kaggle_Sample.csv', chunksize=1
 df_list.append(df3)
 
 df4 = pd.DataFrame()
-df4_cols = ["name", "spkid", "id", "diameter", "albedo", "diameter_sigma",
+df4_cols = ["name", "spkid", "class", "diameter", "albedo", "diameter_sigma",
 			"epoch", "epoch_cal",
 			"om", "w"]
 for chunk in pd.read_csv('../data/dataset.csv', chunksize=10000,
@@ -130,30 +130,30 @@ plot_step(df1, "v_homeruns", "v_score", "df_1_plot_5")
 
 plot_linear(df2, "DISTANCE", "AIR_TIME", "df_2_plot_1")
 plot_linear(df2, "FLIGHT_NUMBER", "TAXI_IN", "df_2_plot_2")
-plot_linear(df2, "FLIGHT_NUMBER", "ARRIVAL_DELAY", "df_2_plot_3")
-plot_step(df2, "AIR_TIME", "TAXI_OUT", "df_2_plot_4")
-plot_step(df2, "DISTANCE", "TAXI_IN", "df_2_plot_5")
+plot_histogram(df2, "DISTANCE", "TAXI_OUT", "df_2_plot_3")
+plot_histogram(df2, "FLIGHT_NUMBER", "TAXI_OUT", "df_2_plot_4")
+plot_histogram(df2, "FLIGHT_NUMBER", "AIR_TIME", "df_2_plot_5")
 
-plot_linear(df3, "stockNum", "vf_EngineCylinders", "df_3_plot_1")
+plot_linear(df3, "vf_ForwardCollisionWarning", "vf_EngineCylinders", "df_3_plot_1")
 plot_linear(df3, "vf_EngineCylinders", "vf_FuelTypePrimary", "df_3_plot_2")
-plot_linear(df3, "vf_EngineKW", "vf_FuelTypeSecondary", "df_3_plot_3")
-plot_step(df3, "vf_EngineCylinders", "vf_FuelTypeSecondary", "df_3_plot_4")
-plot_step(df3, "vf_EngineCylinders", "vf_EngineKW", "df_3_plot_5")
+plot_step(df3, "vf_EngineKW", "vf_FuelTypeSecondary", "df_3_plot_3")
+plot_linear(df3, "vf_EngineCylinders", "vf_FuelTypeSecondary", "df_3_plot_4")
+plot_histogram(df3, "vf_EngineCylinders", "vf_EngineKW", "df_3_plot_5")
 
-plot_linear(df4, "id", "diameter", "df_4_plot_1")
-plot_linear(df4, "spkid", "diameter_sigma", "df_4_plot_2")
-plot_linear(df4, "spkid", "diameter", "df_4_plot_3")
-plot_step(df4, "albedo", "diameter", "df_4_plot_4")
-plot_step(df4, "diameter", "diameter_sigma", "df_4_plot_5")
+plot_linear(df4, "class", "diameter", "df_4_plot_1")
+plot_step(df4, "spkid", "class", "df_4_plot_2")
+plot_histogram(df4, "spkid", "diameter", "df_4_plot_3")
+plot_boxplot(df4, "class", "albedo", "df_4_plot_4")
+plot_histogram(df4, "diameter", "diameter_sigma", "df_4_plot_5")
 
 plot_linear(df5, "id", "salary_to", "df_5_plot_1")
 plot_linear(df5, "id", "salary_from", "df_5_plot_2")
-plot_linear(df5, "schedule_id", "experience_id", "df_5_plot_3")
-plot_step(df5, "experience_id", "salary_to", "df_5_plot_4")
-plot_step(df5, "experience_id", "salary_from", "df_5_plot_5")
+plot_step(df5, "schedule_id", "experience_id", "df_5_plot_3")
+plot_boxplot(df5, "experience_id", "salary_to", "df_5_plot_4")
+plot_histogram(df5, "experience_id", "salary_from", "df_5_plot_5")
 
 plot_linear(df6, "Vict Age", "Vict Sex", "df_6_plot_1")
 plot_linear(df6, "Vict Age", "LON", "df_6_plot_2")
 plot_linear(df6, "LAT", "LON", "df_6_plot_3")
 plot_step(df6, "Vict Age", "Status", "df_6_plot_4")
-plot_step(df6, "Vict Age", "LAT", "df_6_plot_5")
+plot_histogram(df6, "LON", "Status", "df_6_plot_5")
