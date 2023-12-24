@@ -15,7 +15,7 @@ def create_db():
 		try:
 			with connection:
 				cursor.execute("PRAGMA foreign_keys = 1")
-				cursor.execute('''
+				cursor.execute("""
 				CREATE TABLE IF NOT EXISTS game_results (
 				id INTEGER PRIMARY KEY,
 				name TEXT NOT NULL,
@@ -26,20 +26,20 @@ def create_db():
 				min_rating INTEGER NOT NULL,
 				time_on_game INTEGER NOT NULL
 				)
-				''')
-				cursor.execute('''
+				""")
+				cursor.execute("""
 				CREATE TABLE IF NOT EXISTS city_awards (
 				id INTEGER PRIMARY KEY AUTOINCREMENT,
 				name TEXT NOT NULL,
 				place INTEGER NOT NULL,
 				prise INTEGER NOT NULL
 				)
-				''')
-				cursor.executemany('''
+				""")
+				cursor.executemany("""
 					INSERT INTO game_results (id, name, city, begin, system, tours_count, min_rating, time_on_game)
 					VALUES(
 						:id, :name, :city, :begin, :system, :tours_count, :min_rating, :time_on_game)
-					''', data)
+					""", data)
 		except Exception as e:
 			print(e)
 			pass
@@ -54,10 +54,10 @@ def update_table():
 		connection.row_factory = sqlite3.Row
 		try:
 			with connection:
-				cursor.executemany('''
+				cursor.executemany("""
 					INSERT INTO city_awards (name, place, prise)
 					VALUES(:name, :place, :prise)
-				''', data)
+				""", data)
 		except Exception as e:
 			print(e)
 			pass

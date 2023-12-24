@@ -29,7 +29,7 @@ def create_db():
 
 		try:
 			with connection:
-				cursor.execute('''CREATE TABLE IF NOT EXISTS music(
+				cursor.execute("""CREATE TABLE IF NOT EXISTS music(
 				id INTEGER PRIMARY KEY AUTOINCREMENT,
 				artist TEXT,
 				acousticness REAL,
@@ -44,12 +44,12 @@ def create_db():
 				energy REAL,
 				loudness REAL
 				)
-				''')
-				cursor.executemany('''
+				""")
+				cursor.executemany("""
 					INSERT INTO music (artist, song, duration_ms, year, tempo, genre, instrumentalness, explicit, loudness)
 					VALUES(
 						:artist, :song, :duration_ms, :year, :tempo, :genre, :instrumentalness, :explicit, :loudness)
-					''', data)
+					""", data)
 		except Exception as e:
 			print(e)
 			pass
@@ -69,19 +69,19 @@ def update_table():
 					cursor = cursor.execute("SELECT * FROM music WHERE artist=?", (artist,))
 					existing_record = cursor.fetchone()
 					if existing_record:
-						cursor.execute('''
+						cursor.execute("""
 							UPDATE music SET
 							acousticness=?,
 							popularity=?
-							WHERE artist=?''', (
+							WHERE artist=?""", (
 								record['acousticness'], record['popularity'], artist))
 					else:
 						# если записи нет в таблице, добавляем ее
-						cursor.execute('''
+						cursor.execute("""
 							INSERT INTO music (artist, song, duration_ms, year, tempo, genre,
 							acousticness, energy, popularity)
 							VALUES (:artist, :song, :duration_ms, :year, :tempo, :genre, :acousticness, :energy, :popularity)
-							''',
+							""",
 									(record['artist'], record['song'], int(record['duration_ms']), int(record['year']),
 										float(record['tempo']), record['genre'], float(record['acousticness']),
 										float(record['energy']), int(record['popularity'])))

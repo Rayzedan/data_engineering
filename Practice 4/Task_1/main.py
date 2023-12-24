@@ -12,7 +12,7 @@ def update_table():
 
 		try:
 			with connection:
-				cursor.execute('''
+				cursor.execute("""
 				CREATE TABLE IF NOT EXISTS game_results (
 				id INTEGER PRIMARY KEY,
 				name TEXT NOT NULL,
@@ -23,12 +23,12 @@ def update_table():
 				min_rating INTEGER NOT NULL,
 				time_on_game INTEGER NOT NULL
 				)
-				''')
-				cursor.executemany('''
+				""")
+				cursor.executemany("""
 					INSERT INTO game_results (id, name, city, begin, system, tours_count, min_rating, time_on_game)
 					VALUES(
 						:id, :name, :city, :begin, :system, :tours_count, :min_rating, :time_on_game)
-					''', data)
+					""", data)
 		except Exception as e:
 			print(e)
 			pass
