@@ -16,10 +16,14 @@ for filename in os.listdir():
 			html = f.read()
 			soup = BeautifulSoup(html, 'html.parser')
 			item = {}
-			item['type'] = soup.find('div', {'class': 'chess-wrapper'}).find_all('span')[0].text
-			item['tournament'] = soup.find('h1', {'class': 'title'}).text
-			item['city'] = soup.find('p', {'class': 'address-p'}).text.split(':')[1].strip()
-			item['start_date'] = soup.find('p', {'class': 'address-p'}).text.split(':')[2].strip()
+			item['type'] = soup.find('div', {'class': 'chess-wrapper'}).find_all('span')[0].text.split(':')[1].strip()
+			item['tournament'] = soup.find('h1', {'class': 'title'}).text.split(':')[1].strip()
+			city = soup.find_all("p",attrs={"class": "address-p"})[0].get_text().replace("Город:", "")
+			start_date = city.find("Начало")
+			date = city[start_date:].replace("Начало:", "").strip()
+			city = city[:start_date].strip()
+			item["city"] = city
+			item["start_date"] = date
 			item['num_rounds'] = int(soup.find('span', {'class': 'count'}).text.split(':')[1])
 			item['time_control'] = soup.find('span', {'class': 'year'}).text.split(':')[1].strip()
 			item['min_rating'] = int(soup.find_all('span')[-1].text.split(':')[1])

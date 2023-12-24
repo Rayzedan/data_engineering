@@ -29,7 +29,7 @@ for filename in os.listdir():
 						item[el.name] = float(el.get_text().strip())
 					elif el.name == "new":
 						item[el.name] = el.get_text().strip() == "+"
-					elif el.name == "exclusive" or el.name == "sorty":
+					elif el.name == "exclusive" or el.name == "sporty":
 						item[el.name] = el.get_text().strip() == "yes"
 					else:
 						item[el.name] = el.get_text().strip()
