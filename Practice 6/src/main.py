@@ -82,7 +82,7 @@ result_analyze = []
 for df in df_list:
 	result_analyze.append(analyze_data(df))
 
-with open('results.json', 'a') as f:
+with open('../results/results.json', 'a') as f:
 	for index, data in enumerate(result_analyze):
 		json.dump({f'df{index}_memory_usage': data['col_sizes']}, f)
 
@@ -131,18 +131,18 @@ plot_step(df1, "v_homeruns", "v_score", "df_1_plot_5")
 plot_linear(df2, "DISTANCE", "AIR_TIME", "df_2_plot_1")
 plot_linear(df2, "FLIGHT_NUMBER", "TAXI_IN", "df_2_plot_2")
 plot_linear(df2, "FLIGHT_NUMBER", "ARRIVAL_DELAY", "df_2_plot_3")
-plot_step(df2, "ORIGIN_AIRPORT", "TAXI_OUT", "df_2_plot_4")
-plot_step(df2, "FLIGHT_NUMBER", "DAY_OF_WEEK", "df_2_plot_5")
+plot_step(df2, "AIR_TIME", "TAXI_OUT", "df_2_plot_4")
+plot_step(df2, "DISTANCE", "TAXI_IN", "df_2_plot_5")
 
 plot_linear(df3, "stockNum", "vf_EngineCylinders", "df_3_plot_1")
 plot_linear(df3, "vf_EngineCylinders", "vf_FuelTypePrimary", "df_3_plot_2")
 plot_linear(df3, "vf_EngineKW", "vf_FuelTypeSecondary", "df_3_plot_3")
 plot_step(df3, "vf_EngineCylinders", "vf_FuelTypeSecondary", "df_3_plot_4")
-plot_step(df3, "stockNum", "vf_ForwardCollisionWarning", "df_3_plot_5")
+plot_step(df3, "vf_EngineCylinders", "vf_EngineKW", "df_3_plot_5")
 
 plot_linear(df4, "id", "diameter", "df_4_plot_1")
-plot_linear(df4, "id", "diameter_sigma", "df_4_plot_2")
-plot_linear(df4, "spkid", "om", "df_4_plot_3")
+plot_linear(df4, "spkid", "diameter_sigma", "df_4_plot_2")
+plot_linear(df4, "spkid", "diameter", "df_4_plot_3")
 plot_step(df4, "albedo", "diameter", "df_4_plot_4")
 plot_step(df4, "diameter", "diameter_sigma", "df_4_plot_5")
 
@@ -156,4 +156,4 @@ plot_linear(df6, "Vict Age", "Vict Sex", "df_6_plot_1")
 plot_linear(df6, "Vict Age", "LON", "df_6_plot_2")
 plot_linear(df6, "LAT", "LON", "df_6_plot_3")
 plot_step(df6, "Vict Age", "Status", "df_6_plot_4")
-plot_step(df6, "Premis Cd", "LAT", "df_6_plot_5")
+plot_step(df6, "Vict Age", "LAT", "df_6_plot_5")
