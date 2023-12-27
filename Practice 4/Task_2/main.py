@@ -10,7 +10,7 @@ def create_db():
 
 	with sqlite3.connect('game_results.db') as connection:
 		cursor = connection.cursor()
-		connection.row_factory = sqlite3.Row
+		cursor.row_factory = sqlite3.Row
 
 		try:
 			with connection:
@@ -51,7 +51,7 @@ def update_table():
 
 	with sqlite3.connect('game_results.db') as connection:
 		cursor = connection.cursor()
-		connection.row_factory = sqlite3.Row
+		cursor.row_factory = sqlite3.Row
 		try:
 			with connection:
 				cursor.executemany("""
@@ -66,24 +66,24 @@ def update_table():
 def join_tables():
 	with sqlite3.connect('game_results.db') as connection:
 		cursor = connection.cursor()
-		connection.row_factory = sqlite3.Row
+		cursor.row_factory = sqlite3.Row
 		try:
 			with connection:
 				insert_query = f"SELECT	* FROM game_results JOIN city_awards ON game_results.name = city_awards.name"
 				cursor.execute(insert_query)
-				save_result(cursor.fetchall(), "result_request_1")
+				save_result([dict(row) for row in cursor.fetchall()], "result_request_1")
 				insert_query = (f"SELECT MAX(time_on_game) FROM game_results JOIN city_awards "
 								f"ON game_results.name = city_awards.name WHERE place > 4")
 				cursor.execute(insert_query)
-				save_result(cursor.fetchall(), "result_request_2")
+				save_result([dict(row) for row in cursor.fetchall()], "result_request_2")
 				insert_query = (f"SELECT MIN(time_on_game) FROM game_results JOIN city_awards "
 								f"ON game_results.name = city_awards.name WHERE prise > 5000")
 				cursor.execute(insert_query)
-				save_result(cursor.fetchall(), "result_request_3")
+				save_result([dict(row) for row in cursor.fetchall()], "result_request_3")
 				insert_query = (f"SELECT AVG(place) FROM game_results JOIN city_awards "
 								f"ON game_results.name = city_awards.name WHERE min_rating > 100")
 				cursor.execute(insert_query)
-				save_result(cursor.fetchall(), "result_request_4")
+				save_result([dict(row) for row in cursor.fetchall()], "result_request_4")
 		except Exception as e:
 			print(e)
 			pass

@@ -1,6 +1,8 @@
 import json
 import sqlite3
 
+from utils import save_result
+
 
 def update_table():
 	with open("task_1_var_55_item.json", encoding='utf-8') as jsonFile:
@@ -8,7 +10,7 @@ def update_table():
 
 	with sqlite3.connect('game_results.db') as connection:
 		cursor = connection.cursor()
-		connection.row_factory = sqlite3.Row
+		cursor.row_factory = sqlite3.Row
 
 		try:
 			with connection:
@@ -37,37 +39,32 @@ def update_table():
 def sorted_data():
 	with sqlite3.connect('game_results.db') as connection:
 		cursor = connection.cursor()
-		connection.row_factory = sqlite3.Row
+		cursor.row_factory = sqlite3.Row
 		try:
 			with connection:
-				select_query = "SELECT * FROM game_results ORDER BY min_rating LIMIT 65"
-				cursor.execute(select_query)
-				results = cursor.fetchall()
+				results = cursor.execute("SELECT * FROM game_results ORDER BY min_rating LIMIT 65")
+				save_result([dict(row) for row in results.fetchall()], "result_sorted_by_min_rating_request")
 		except Exception as e:
 			print(e)
 			pass
-		with open('sorted_data.json', 'w', encoding='utf-8') as f:
-			json.dump(results, f, ensure_ascii=False)
 
 
 def sorted_by_column_data():
 	with sqlite3.connect('game_results.db') as connection:
 		cursor = connection.cursor()
-		connection.row_factory = sqlite3.Row
+		cursor.row_factory = sqlite3.Row
 		try:
 			with connection:
-				select_query = "SELECT MAX(time_on_game) FROM game_results"
-				cursor.execute(select_query)
-				print(cursor.fetchall())
-				select_query = "SELECT MIN(time_on_game) FROM game_results"
-				cursor.execute(select_query)
-				print(cursor.fetchall())
-				select_query = "SELECT AVG(time_on_game) FROM game_results"
-				cursor.execute(select_query)
-				print(cursor.fetchall())
-				select_query = "SELECT SUM(time_on_game) FROM game_results"
-				cursor.execute(select_query)
-				print(cursor.fetchall())
+				results = cursor.execute(
+					'''
+					SELECT
+						SUM(time_on_game) as sum,
+						MIN(time_on_game) as min,
+						MAX(time_on_game) as max,
+						AVG(time_on_game) as avg
+						FROM game_results
+				''')
+				save_result([dict(row) for row in results.fetchall()], "result_sorted_by_column_request")
 		except Exception as e:
 			print(e)
 			pass
@@ -76,11 +73,10 @@ def sorted_by_column_data():
 def sorted_by_city():
 	with sqlite3.connect('game_results.db') as connection:
 		cursor = connection.cursor()
-		connection.row_factory = sqlite3.Row
+		cursor.row_factory = sqlite3.Row
 		try:
 			with connection:
-				select_query = "SELECT city FROM game_results"
-				cursor.execute(select_query)
+				cursor.execute("SELECT city FROM game_results")
 				results = cursor.fetchall()
 		except Exception as e:
 			print(e)
@@ -91,24 +87,21 @@ def sorted_by_city():
 				city_counts[city[0]] += 1
 			else:
 				city_counts[city[0]] = 1
-		with open('sorted_by_city_data.json', 'w', encoding='utf-8') as f:
+		with open('result_sorted_by_city_request.json', 'w', encoding='utf-8') as f:
 			json.dump(city_counts, f, ensure_ascii=False)
 
 
 def sorted_by_predicate():
 	with sqlite3.connect('game_results.db') as connection:
 		cursor = connection.cursor()
-		connection.row_factory = sqlite3.Row
+		cursor.row_factory = sqlite3.Row
 		try:
 			with connection:
-				select_query = "SELECT * FROM game_results WHERE min_rating > 100 ORDER BY time_on_game LIMIT 65"
-				cursor.execute(select_query)
-				results = cursor.fetchall()
+				results = cursor.execute("SELECT * FROM game_results WHERE min_rating > 100 ORDER BY time_on_game LIMIT 65")
+				save_result([dict(row) for row in results.fetchall()], "result_sorted_by_predicate_request")
 		except Exception as e:
 			print(e)
 			pass
-		with open('sorted_by_predicate_data.json', 'w', encoding='utf-8') as f:
-			json.dump(results, f, ensure_ascii=False)
 
 
 if __name__ == '__main__':
