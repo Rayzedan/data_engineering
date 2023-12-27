@@ -81,10 +81,7 @@ def update_table():
 							INSERT INTO music (artist, song, duration_ms, year, tempo, genre,
 							acousticness, energy, popularity)
 							VALUES (:artist, :song, :duration_ms, :year, :tempo, :genre, :acousticness, :energy, :popularity)
-							""",
-									(record['artist'], record['song'], int(record['duration_ms']), int(record['year']),
-										float(record['tempo']), record['genre'], float(record['acousticness']),
-										float(record['energy']), int(record['popularity'])))
+							""", record)
 		except Exception as e:
 			print(e)
 			pass

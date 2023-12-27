@@ -26,8 +26,11 @@ for filename in os.listdir():
 			item["start_date"] = date
 			item['num_rounds'] = int(soup.find('span', {'class': 'count'}).text.split(':')[1])
 			item['time_control'] = soup.find('span', {'class': 'year'}).text.split(':')[1].strip()
-			item['min_rating'] = int(soup.find_all('span')[-1].text.split(':')[1])
-			item['rating'] = float(soup.find_all('span')[-3].text.split(':')[1])
+			item['min_rating'] = int(
+				soup.find_all("span", string=re.compile("Минимальный рейтинг для участия:"))[0].getText().split(':')[1].strip())
+			item['rating'] = float(
+				soup.find_all("span", string=re.compile("Рейтинг:"))[0].getText().split(':')[
+					1].strip())
 			item['views'] = int(
 				soup.find_all("span", string=re.compile("Просмотры:"))[0].getText().split(':')[1].strip())
 			items.append(item)
